@@ -1,5 +1,4 @@
 return {
-	-- lsp 설정
 	{
 		"mason-org/mason-lspconfig.nvim",
 		dependencies = {
@@ -22,34 +21,43 @@ return {
 			automatic_installation = true,
 			handlers = {
 				function(server_name)
-					-- nvim-cmp와 LSP 통합을 위한 capabilities 설정
 					local capabilities = require("cmp_nvim_lsp").default_capabilities()
 					require("lspconfig")[server_name].setup({
 						capabilities = capabilities,
 					})
 				end,
-				-- Lua LSP 특별 설정
-			},
+      },
 		},
-	},
-	-- AutoHotkey 플러그인
-	{
-		"adambasis/nvim-autohotkey",
-		ft = { "autohotkey", "ahk" },
-		config = function()
-			-- AutoHotkey 파일 타입 자동 감지
-			vim.filetype.add({
-				extension = {
-					ahk = "autohotkey",
-					ahk2 = "autohotkey",
-				},
-				pattern = {
-					[".*%.ahk"] = "autohotkey",
-				},
+    config = function(_, opts)
+			require("mason-lspconfig").setup(opts)
+			local lspconfig = require("lspconfig")
+			local configs = require("lspconfig.configs")
+
+			if not configs["ahk2"] then
+				configs["ahk2"] = {
+					default_config = {
+						cmd = {
+							"node",
+							"C:\\Tools\\vscode-autohotkey-v2-lsp\\server\\dist\\server.js",
+							"--stdio",
+						},
+						filetypes = { "ahk", "autohotkey", "ah2" },
+						init_options = {
+							locale = "en-us",
+							InterpreterPath = "C:/Program Files/AutoHotkey/UX/AutoHotkeyUX.exe", -- AHK v2 실행 파일 경로
+						},
+						single_file_support = true,
+					},
+				}
+			end
+
+			-- 정의한 ahk2 서버 실행
+			lspconfig.ahk2.setup({
+				capabilities = require("cmp_nvim_lsp").default_capabilities(),
+				-- 스크린샷의 on_attach 기능이 필요하면 여기에 추가
 			})
 		end,
 	},
-	-- formatter 및 linter 설치
 	{
 		"jay-babu/mason-null-ls.nvim",
 		event = { "BufReadPre", "BufNewFile" },
@@ -85,7 +93,6 @@ return {
 			require("mason-null-ls").setup(opts)
 		end,
 	},
-	-- formatter 실제 적용
 	{
 		"stevearc/conform.nvim",
 		opts = {
@@ -118,7 +125,6 @@ return {
 			},
 		},
 	},
-	-- linter 실제 적용
 	{
 		"mfussenegger/nvim-lint",
 		event = {
@@ -150,35 +156,38 @@ return {
 			end, { desc = "Trigger linting for current file" })
 		end,
 	},
-	-- DAP (Debug Adapter Protocol) 코어
 	{
 		"mfussenegger/nvim-dap",
 		config = function()
-			-- 브레이크포인트 아이콘 설정
+			-- 일반 중단점 (Red Circle)
 			vim.fn.sign_define("DapBreakpoint", {
 				text = "🔴",
 				texthl = "DapBreakpoint",
 				linehl = "",
 				numhl = "DapBreakpoint",
 			})
+			-- 조건부 중단점 (Yellow Circle)
 			vim.fn.sign_define("DapBreakpointCondition", {
 				text = "🟡",
 				texthl = "DapBreakpoint",
 				linehl = "",
 				numhl = "DapBreakpoint",
 			})
+			-- 거부된 중단점 (No Entry / Circle with Slash)
 			vim.fn.sign_define("DapBreakpointRejected", {
 				text = "🚫",
 				texthl = "DapBreakpoint",
 				linehl = "",
 				numhl = "DapBreakpoint",
 			})
+			-- 현재 실행 위치 (Play Button)
 			vim.fn.sign_define("DapStopped", {
 				text = "▶️",
 				texthl = "DapStopped",
 				linehl = "DapStoppedLine",
 				numhl = "DapStopped",
 			})
+			-- 로그 포인트 (Notebook/Memo)
 			vim.fn.sign_define("DapLogPoint", {
 				text = "📝",
 				texthl = "DapLogPoint",
@@ -187,7 +196,6 @@ return {
 			})
 		end,
 		dependencies = {
-			-- DAP UI
 			{
 				"rcarriga/nvim-dap-ui",
 				dependencies = { "nvim-neotest/nvim-nio" },
@@ -196,7 +204,6 @@ return {
 					local dap = require("dap")
 					local dapui = require("dapui")
 					dapui.setup(opts)
-					-- DAP 이벤트 시 자동으로 UI 열기/닫기
 					dap.listeners.after.event_initialized["dapui_config"] = function()
 						dapui.open()
 					end
@@ -208,7 +215,6 @@ return {
 					end
 				end,
 			},
-			-- Virtual text로 변수 값 표시
 			{
 				"theHamsta/nvim-dap-virtual-text",
 				opts = {},
@@ -280,7 +286,6 @@ return {
 			},
 		},
 	},
-	-- Mason을 통한 디버거 자동 설치
 	{
 		"jay-babu/mason-nvim-dap.nvim",
 		dependencies = {
@@ -300,7 +305,6 @@ return {
 				function(config)
 					require("mason-nvim-dap").default_setup(config)
 				end,
-				-- Python 특별 설정
 				python = function(config)
 					config.adapters = {
 						type = "executable",
@@ -309,7 +313,6 @@ return {
 					}
 					require("mason-nvim-dap").default_setup(config)
 				end,
-				-- Lua 특별 설정
 			},
 		},
 	},
