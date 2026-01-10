@@ -32,6 +32,23 @@ return {
 			},
 		},
 	},
+	-- AutoHotkey 플러그인
+	{
+		"adambasis/nvim-autohotkey",
+		ft = { "autohotkey", "ahk" },
+		config = function()
+			-- AutoHotkey 파일 타입 자동 감지
+			vim.filetype.add({
+				extension = {
+					ahk = "autohotkey",
+					ahk2 = "autohotkey",
+				},
+				pattern = {
+					[".*%.ahk"] = "autohotkey",
+				},
+			})
+		end,
+	},
 	-- formatter 및 linter 설치
 	{
 		"jay-babu/mason-null-ls.nvim",
@@ -276,7 +293,7 @@ return {
 				"debugpy", -- Python
 				"js-debug-adapter", -- JavaScript/TypeScript
 				"java-debug-adapter", -- Java
-        "local-lua-debugger-vscode"
+				"local-lua-debugger-vscode",
 			},
 			automatic_installation = true,
 			handlers = {
