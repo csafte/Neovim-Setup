@@ -10,8 +10,8 @@ map("n","<C-j>","<C-w>j",{desc = "under"})
 map("n","<C-k>","<C-w>k",{desc = "up"})
 map("n","<C-l>","<C-w>l",{desc = "right"})
 
-map("n","<leader>tn", ":tabnew<CR>")
-map("n","<leader>th", ":tabprev<CR>")
-map("n","<leader>tl", ":tabnext<CR>")
-map("n","<leader>tc", ":tabclose<CR>")
+map("n","<leader>tn","<cmd>BufferLineCycleNext<cr>")
+map("n","<leader>tp","<cmd>BufferLineCyclePrev<cr>")
+map("n","<leader>tc","<cmd>bdelete<cr>")
+map("n","<leader>tl","<cmd>BufferLinePick<cr>")
 
