@@ -11,12 +11,13 @@ return {
 			"onsails/lspkind.nvim",
 			"ray-x/cmp-treesitter",
 			"L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip"
 		},
 		event = "InsertEnter",
 		config = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
-			
+		  require("luasnip.loaders.from_vscode").lazy_load()	
 			cmp.setup({
 				snippet = {
 					expand = function(args)

@@ -17,3 +17,5 @@ o.encoding = "UTF-8"
 o.cmdheight = 1
 o.scrolloff = 10
 o.mouse:append("a")
+
+vim.g.lazyvim_mini_snippets_in_completion = true
